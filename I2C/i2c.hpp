@@ -9,6 +9,9 @@
 #define I2C_I2C_HPP_
 
 #include <logger/inc/LoggerCpp.h>
+#include <sys/ioctl.h>
+#include <linux/i2c.h>
+#include <linux/i2c-dev.h>
 
 
 // standard mode: 100 kbit/s, full speed: 400 kbit/s, fast mode: 1 mbit/s, high speed: 3,2 Mbit/s
@@ -19,17 +22,29 @@ enum speed_mode {
 	high = 3200000
 };
 
+enum communication_mode {
+	master,
+	slave
+};
+
 class i2c {
 public:
-	i2c(int sda, int scl);
+	i2c(char*);
 	bool set_speed(speed_mode speed);
 	int get_speed(void);
-	int send(char*);
+	bool set_communication_mode(communication_mode mode);
+	int get_comminication_mode(void);
+	unsigned char* request(uint8_t address, uint8_t* message);
 
 private:
-	int sda;
-	int scl;
+	char* bus_name;
 	int speed;
+	int mode;
+	Log::Logger mLogger;
+	int i2c_fd;
+	struct i2c_rdwr_ioctl_data msgset;
+	struct i2c_msg iomsgs[2];
+
 };
 
 

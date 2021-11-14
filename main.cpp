@@ -10,11 +10,22 @@
 #include "logger/inc/LoggerCpp.h"
 #include "I2C/i2c.hpp"
 
-
-/**
- * @brief Simple example program
- */
 using namespace std;
+
+class Tester {
+public:
+    Tester() :
+        mLogger("main.Tester")
+    {
+    }
+
+    void constTest (void) const {
+        mLogger.debug() << "log within a const method";
+    }
+
+private:
+    Log::Logger mLogger; ///< A named logger to produce log
+};
 
 int main ()
 {
@@ -51,11 +62,14 @@ int main ()
     logger.debug() << "Deci = " << std::right << std::setfill('0') << std::setw(8) << 76035 << " test";
     logger.debug() << "sizeof(logger)=" << sizeof(logger);
 
-    i2c test(1,3);
-    speed_mode test2;
-
+    i2c test("/dev/i2c-0");
     test.set_speed(speed_mode::standard);
+    test.set_communication_mode(communication_mode::master);
     cout << test.get_speed();
+    uint8_t test1=0x20;
+    uint8_t	test2[1];
+    test2[0] = 0x20;
+    test.request(test1, test2);
 
     return 0;
 }
