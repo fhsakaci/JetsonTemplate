@@ -29,12 +29,15 @@ enum communication_mode {
 
 class i2c {
 public:
-	i2c(char*);
+	i2c();
+	i2c(char*, int addr);
 	bool set_speed(speed_mode speed);
 	int get_speed(void);
 	bool set_communication_mode(communication_mode mode);
 	int get_comminication_mode(void);
 	unsigned char* request(uint8_t address, uint8_t* message);
+	char* read_data(char reg[], int size);
+	void write_data(int size, char config[]);
 
 private:
 	char* bus_name;

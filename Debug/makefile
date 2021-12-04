@@ -9,6 +9,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include logger/src/subdir.mk
+-include ads1115/subdir.mk
 -include I2C/subdir.mk
 -include subdir.mk
 -include objects.mk

@@ -24,6 +24,7 @@ CPP_DEPS :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 I2C \
+ads1115 \
 logger/src \
 . \
 

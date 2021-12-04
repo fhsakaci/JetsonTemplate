@@ -5,27 +5,16 @@
  *      Author: sakaci
  */
 
+#include "logger/inc/LoggerCpp.h"
+#include "ads1115/ads1115.hpp"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <cstdlib>
 #include <iostream>
 #include <thread>
-#include "logger/inc/LoggerCpp.h"
-#include "I2C/i2c.hpp"
 
 using namespace std;
-
-class Tester {
-public:
-    Tester() :
-        mLogger("main.Tester")
-    {
-    }
-
-    void constTest (void) const {
-        mLogger.debug() << "log within a const method";
-    }
-
-private:
-    Log::Logger mLogger; ///< A named logger to produce log
-};
 
 int main ()
 {
@@ -62,14 +51,14 @@ int main ()
     logger.debug() << "Deci = " << std::right << std::setfill('0') << std::setw(8) << 76035 << " test";
     logger.debug() << "sizeof(logger)=" << sizeof(logger);
 
-    i2c test("/dev/i2c-0");
-    test.set_speed(speed_mode::standard);
-    test.set_communication_mode(communication_mode::master);
-    cout << test.get_speed();
-    uint8_t test1=0x20;
-    uint8_t	test2[1];
-    test2[0] = 0x20;
-    test.request(test1, test2);
 
+    char *bus_name;
+    bus_name = (char*)malloc(sizeof(char)*20);
+    sprintf(bus_name, "/dev/i2c-1");
+    ads1115 test(bus_name, 0x48);
+    thread thread_func(test, 3);
+    thread_func.join();
+    //test.read_channel(channel::one);
+    free(bus_name);
     return 0;
 }
